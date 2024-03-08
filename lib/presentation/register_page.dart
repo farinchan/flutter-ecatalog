@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecatalog/bloc/register/register_bloc.dart';
+import 'package:flutter_ecatalog/data/datasources/local_datasource.dart';
 import 'package:flutter_ecatalog/data/models/request/register_request_model.dart';
 import 'package:flutter_ecatalog/presentation/home_page.dart';
+import 'package:flutter_ecatalog/presentation/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -14,9 +16,20 @@ TextEditingController? emailController;
 TextEditingController? passwordController;
 
 class _RegisterPageState extends State<RegisterPage> {
+  
+  void checkToken() async {
+    final token = await LocalDataSource().getToken();
+    if (token != null) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return HomePage();
+      }));
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
+    checkToken();
     nameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
@@ -81,7 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   );
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return HomePage();
+                    return LoginPage();
                   }));
                 }
               },
@@ -108,6 +121,18 @@ class _RegisterPageState extends State<RegisterPage> {
                 }
               },
             ),
+            SizedBox(height: 16),
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return LoginPage();
+                }));
+              },
+              child: Text(
+                'Sudah punya akun? Login',
+                textAlign: TextAlign.center,
+              ),
+            )
           ],
         ),
       ),
